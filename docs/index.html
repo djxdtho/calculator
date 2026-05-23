@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Calculator — AA Elements</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#0e0e0e;overflow:hidden}
+.bg{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at 30% 20%,#00d4ff10,transparent 60%),radial-gradient(ellipse at 70% 80%,#5b0fbe10,transparent 60%)}
+.calc{position:relative;z-index:1;width:340px;padding:24px;background:rgba(255,255,255,.05);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.08);border-radius:24px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.display{margin-bottom:20px;padding:16px 20px;background:rgba(0,0,0,.4);border-radius:16px;text-align:right;min-height:100px;display:flex;flex-direction:column;justify-content:flex-end}
+.expr{color:rgba(255,255,255,.4);font-size:14px;min-height:20px;word-break:break-all;transition:color .3s}
+.result{color:#fff;font-size:36px;font-weight:300;word-break:break-all;transition:font-size .15s}
+.result.small{font-size:24px}
+.buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.btn{aspect-ratio:1;border:none;border-radius:14px;font-size:20px;font-weight:500;cursor:pointer;transition:transform .1s,background .15s;background:rgba(255,255,255,.06);color:#fff;display:flex;align-items:center;justify-content:center;user-select:none}
+.btn:hover{background:rgba(255,255,255,.12)}
+.btn:active{transform:scale(.93)}
+.btn-op{background:rgba(0,212,255,.15);color:#00d4ff}
+.btn-op:hover{background:rgba(0,212,255,.25)}
+.btn-eq{background:linear-gradient(135deg,#00d4ff,#5b0fbe);color:#fff}
+.btn-eq:hover{opacity:.85}
+.btn-clear{color:#ff6b35}
+.btn-zero{grid-column:span 2;aspect-ratio:auto}
+footer{position:fixed;bottom:20px;z-index:1;color:rgba(255,255,255,.2);font-size:12px;letter-spacing:.5px}
+footer a{color:rgba(255,255,255,.3);text-decoration:none}
+footer a:hover{color:rgba(255,255,255,.6)}
+@media(max-width:400px){.calc{width:calc(100vw-32px);padding:16px}.result{font-size:28px}.btn{font-size:18px;border-radius:12px}}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="calc" role="application" aria-label="Calculator">
+  <div class="display">
+    <div class="expr" id="expr"></div>
+    <div class="result" id="result">0</div>
+  </div>
+  <div class="buttons">
+    <button class="btn btn-clear" data-v="C">C</button>
+    <button class="btn" data-v="±">±</button>
+    <button class="btn" data-v="%">%</button>
+    <button class="btn btn-op" data-v="÷">÷</button>
+    <button class="btn" data-v="7">7</button>
+    <button class="btn" data-v="8">8</button>
+    <button class="btn" data-v="9">9</button>
+    <button class="btn btn-op" data-v="×">×</button>
+    <button class="btn" data-v="4">4</button>
+    <button class="btn" data-v="5">5</button>
+    <button class="btn" data-v="6">6</button>
+    <button class="btn btn-op" data-v="-">−</button>
+    <button class="btn" data-v="1">1</button>
+    <button class="btn" data-v="2">2</button>
+    <button class="btn" data-v="3">3</button>
+    <button class="btn btn-op" data-v="+">+</button>
+    <button class="btn btn-zero" data-v="0">0</button>
+    <button class="btn" data-v=".">.</button>
+    <button class="btn btn-eq" data-v="=">=</button>
+  </div>
+</div>
+<footer>by <a href="https://djxdtho.github.io/3D-portfolio/" target="_blank">AA Elements</a></footer>
+<script>
+const resultEl=document.getElementById('result'),exprEl=document.getElementById('expr');
+let a='',op='',b='',res=null,justEval=false;
+function updateDisplay(){const r=res!==null?formatNum(res):b||a||'0';resultEl.textContent=r;resultEl.classList.toggle('small',r.length>10);exprEl.textContent=op?`${formatNum(a||'0')} ${op} ${b||'…'}`:''}
+function formatNum(n){const s=String(n);if(s.length>14)return Number(n).toExponential(4);return s}
+document.querySelector('.buttons').addEventListener('click',e=>{
+  const v=e.target.dataset.v;if(!v)return;
+  if(v==='C'){a='';op='';b='';res=null;justEval=false;updateDisplay();return}
+  if(v==='±'){if(res!==null){res*=-1;updateDisplay();return}const t=b||a;if(t){const n=t.startsWith('-')?t.slice(1):'-'+t;if(b!=='')b=n;else a=n;updateDisplay()}return}
+  if(v==='%'){if(res!==null){res/=100;res=parseFloat(res.toFixed(10));updateDisplay();return}const t=b||a;if(t){const n=String(parseFloat(t)/100);if(b!=='')b=n;else a=n;updateDisplay()}return}
+  if('+-×÷'.includes(v)){if(b){compute()}a=res!==null?String(res):a||'0';op=v;b='';res=null;justEval=false;updateDisplay();return}
+  if(v==='='){if(op&&b){compute();op=''}updateDisplay();justEval=true;return}
+  if(/[\d.]/.test(v)){
+    if(justEval||res!==null&&!op){a='';b='';res=null;justEval=false}
+    const t=b!==''||op?'b':'a';
+    if(v==='.'&&(t==='a'?a:b).includes('.'))return;
+    if(t==='a')a+=v;else b+=v;
+    updateDisplay();
+  }
+});
+function compute(){
+  const na=parseFloat(a),nb=parseFloat(b);
+  if(isNaN(na)||isNaN(nb))return;
+  let r;
+  switch(op){
+    case'+':r=na+nb;break;case'−':r=na-nb;break;case'×':r=na*nb;break;case'÷':r=nb!==0?na/nb:'Error';break;
+  }
+  if(r==='Error'){resultEl.textContent='Error';res=null;a='';op='';b='';return}
+  res=parseFloat(r.toFixed(10));a=String(res);
+}
+document.addEventListener('keydown',e=>{
+  const m={'Enter':'=','Escape':'C','Backspace':'C','Delete':'C','/':'÷','*':'×','-':'−'};
+  const k=m[e.key]||e.key;
+  const btn=document.querySelector(`[data-v="${k}"]`);
+  if(btn){btn.click();btn.style.transform='scale(.93)';setTimeout(()=>btn.style.transform='',100)}
+});
+</script>
+</body>
+</html>
