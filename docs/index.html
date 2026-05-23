@@ -9,38 +9,62 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#0e0e0e;overflow:hidden}
 .bg{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at 30% 20%,#00d4ff10,transparent 60%),radial-gradient(ellipse at 70% 80%,#5b0fbe10,transparent 60%)}
-.calc{position:relative;z-index:1;width:340px;padding:24px;background:rgba(255,255,255,.05);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.08);border-radius:24px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
-.display{margin-bottom:20px;padding:16px 20px;background:rgba(0,0,0,.4);border-radius:16px;text-align:right;min-height:100px;display:flex;flex-direction:column;justify-content:flex-end}
-.expr{color:rgba(255,255,255,.4);font-size:14px;min-height:20px;word-break:break-all;transition:color .3s}
-.result{color:#fff;font-size:36px;font-weight:300;word-break:break-all;transition:font-size .15s}
-.result.small{font-size:24px}
-.buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.btn{aspect-ratio:1;border:none;border-radius:14px;font-size:20px;font-weight:500;cursor:pointer;transition:transform .1s,background .15s;background:rgba(255,255,255,.06);color:#fff;display:flex;align-items:center;justify-content:center;user-select:none}
+.calc{position:relative;z-index:1;width:360px;padding:20px;background:rgba(255,255,255,.05);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.08);border-radius:24px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.display-wrap{margin-bottom:14px;padding:14px 18px;background:rgba(0,0,0,.4);border-radius:16px;text-align:right;min-height:80px;display:flex;flex-direction:column;justify-content:flex-end}
+.expr{color:rgba(255,255,255,.35);font-size:13px;min-height:18px;word-break:break-all;font-family:'Cascadia Code','Fira Code',monospace}
+.result{color:#fff;font-size:32px;font-weight:300;word-break:break-all;transition:font-size .15s}
+.result.small{font-size:22px}
+.sci-row{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:8px}
+.buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.btn{aspect-ratio:1;border:none;border-radius:12px;font-size:18px;font-weight:500;cursor:pointer;transition:transform .1s,background .15s;background:rgba(255,255,255,.06);color:rgba(255,255,255,.85);display:flex;align-items:center;justify-content:center;user-select:none;font-family:inherit}
 .btn:hover{background:rgba(255,255,255,.12)}
-.btn:active{transform:scale(.93)}
-.btn-op{background:rgba(0,212,255,.15);color:#00d4ff}
-.btn-op:hover{background:rgba(0,212,255,.25)}
-.btn-eq{background:linear-gradient(135deg,#00d4ff,#5b0fbe);color:#fff}
-.btn-eq:hover{opacity:.85}
-.btn-clear{color:#ff6b35}
+.btn:active{transform:scale(.92)}
+.btn-sci{background:rgba(255,255,255,.03);color:rgba(255,255,255,.45);font-size:12px;border-radius:9px;font-weight:600}
+.btn-sci:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.65)}
+.btn-fn{color:rgba(0,212,255,.65);background:rgba(0,212,255,.07)}
+.btn-fn:hover{background:rgba(0,212,255,.15)}
+.btn-op{color:#00d4ff;background:rgba(0,212,255,.12)}
+.btn-op:hover{background:rgba(0,212,255,.22)}
+.btn-eq{background:linear-gradient(135deg,#00d4ff,#5b0fbe);color:#fff;font-size:20px}
+.btn-eq:hover{opacity:.88}
+.btn-clear{color:#ff6b35;background:rgba(255,107,53,.08)}
+.btn-clear:hover{background:rgba(255,107,53,.18)}
+.btn-del{color:rgba(255,255,255,.5)}
 .btn-zero{grid-column:span 2;aspect-ratio:auto}
 footer{position:fixed;bottom:20px;z-index:1;color:rgba(255,255,255,.2);font-size:12px;letter-spacing:.5px}
 footer a{color:rgba(255,255,255,.3);text-decoration:none}
 footer a:hover{color:rgba(255,255,255,.6)}
-@media(max-width:400px){.calc{width:calc(100vw-32px);padding:16px}.result{font-size:28px}.btn{font-size:18px;border-radius:12px}}
+@media(max-width:400px){.calc{width:calc(100vw-32px);padding:16px;border-radius:20px}.result{font-size:26px}.btn{font-size:16px;border-radius:10px}}
 </style>
 </head>
 <body>
 <div class="bg"></div>
 <div class="calc" role="application" aria-label="Calculator">
-  <div class="display">
+  <div class="display-wrap">
     <div class="expr" id="expr"></div>
     <div class="result" id="result">0</div>
   </div>
-  <div class="buttons">
+  <div class="sci-row">
+    <button class="btn btn-sci" data-sci="sin(">sin</button>
+    <button class="btn btn-sci" data-sci="cos(">cos</button>
+    <button class="btn btn-sci" data-sci="tan(">tan</button>
+    <button class="btn btn-sci" data-sci="log(">log</button>
+    <button class="btn btn-sci" data-sci="ln(">ln</button>
+    <button class="btn btn-sci" data-sci="√(">√</button>
+    <button class="btn btn-sci" data-sci="²">x²</button>
+    <button class="btn btn-sci" data-sci="^">xʸ</button>
+    <button class="btn btn-sci" data-sci="!">!</button>
+    <button class="btn btn-sci" data-sci="π">π</button>
+    <button class="btn btn-sci" data-sci="e">e</button>
+    <button class="btn btn-sci" data-sci="(">(</button>
+    <button class="btn btn-sci" data-sci=")">)</button>
+    <button class="btn btn-sci" data-sci="1/">1/x</button>
+    <button class="btn btn-sci" data-sci="%">%</button>
+  </div>
+  <div class="buttons" id="mainBtns">
     <button class="btn btn-clear" data-v="C">C</button>
-    <button class="btn" data-v="±">±</button>
-    <button class="btn" data-v="%">%</button>
+    <button class="btn btn-del" data-v="⌫">⌫</button>
+    <button class="btn btn-sci" data-v="±">±</button>
     <button class="btn btn-op" data-v="÷">÷</button>
     <button class="btn" data-v="7">7</button>
     <button class="btn" data-v="8">8</button>
@@ -62,39 +86,64 @@ footer a:hover{color:rgba(255,255,255,.6)}
 <footer>by <a href="https://djxdtho.github.io/3D-portfolio/" target="_blank">AA Elements</a></footer>
 <script>
 const resultEl=document.getElementById('result'),exprEl=document.getElementById('expr');
-let a='',op='',b='',res=null,justEval=false;
-function updateDisplay(){const r=res!==null?formatNum(res):b||a||'0';resultEl.textContent=r;resultEl.classList.toggle('small',r.length>10);exprEl.textContent=op?`${formatNum(a||'0')} ${op} ${b||'…'}`:''}
-function formatNum(n){const s=String(n);if(s.length>14)return Number(n).toExponential(4);return s}
-document.querySelector('.buttons').addEventListener('click',e=>{
-  const v=e.target.dataset.v;if(!v)return;
-  if(v==='C'){a='';op='';b='';res=null;justEval=false;updateDisplay();return}
-  if(v==='±'){if(res!==null){res*=-1;updateDisplay();return}const t=b||a;if(t){const n=t.startsWith('-')?t.slice(1):'-'+t;if(b!=='')b=n;else a=n;updateDisplay()}return}
-  if(v==='%'){if(res!==null){res/=100;res=parseFloat(res.toFixed(10));updateDisplay();return}const t=b||a;if(t){const n=String(parseFloat(t)/100);if(b!=='')b=n;else a=n;updateDisplay()}return}
-  if('+-×÷'.includes(v)){if(b){compute()}a=res!==null?String(res):a||'0';op=v;b='';res=null;justEval=false;updateDisplay();return}
-  if(v==='='){if(op&&b){compute();op=''}updateDisplay();justEval=true;return}
-  if(/[\d.]/.test(v)){
-    if(justEval||res!==null&&!op){a='';b='';res=null;justEval=false}
-    const t=b!==''||op?'b':'a';
-    if(v==='.'&&(t==='a'?a:b).includes('.'))return;
-    if(t==='a')a+=v;else b+=v;
-    updateDisplay();
-  }
-});
-function compute(){
-  const na=parseFloat(a),nb=parseFloat(b);
-  if(isNaN(na)||isNaN(nb))return;
-  let r;
-  switch(op){
-    case'+':r=na+nb;break;case'−':r=na-nb;break;case'×':r=na*nb;break;case'÷':r=nb!==0?na/nb:'Error';break;
-  }
-  if(r==='Error'){resultEl.textContent='Error';res=null;a='';op='';b='';return}
-  res=parseFloat(r.toFixed(10));a=String(res);
+let expr='',ans=0,degMode=true;
+
+function updateDisplay(){
+  exprEl.textContent=expr||'';
+  const r=expr?evalExpr():0;
+  if(r!==null&&r!==undefined){resultEl.textContent=String(r);resultEl.classList.toggle('small',String(r).length>10)}
 }
+
+const mathMap={
+  'π':'Math.PI','e':'Math.E','√(':'Math.sqrt(','²':'**2','!':'factorial(','sin(':'Math.sin(','cos(':'Math.cos(','tan(':'Math.tan(','log(':'Math.log10(','ln(':'Math.log(','×':'*','÷':'/','−':'-','^':'**','%':'/100','1/':'1/','±':'-'
+};
+
+function factorial(n){if(n<0||n>170||n%1!==0)return NaN;let r=1;for(let i=2;i<=n;i++)r*=i;return r}
+
+function evalExpr(){
+  let s=expr.trim();
+  if(!s)return 0;
+  let t=s;
+  t=t.replace(/([\d.]+)!/g,'factorial($1)');
+  for(const[k,v]of Object.entries(mathMap))if(k!=='!')t=t.split(k).join(v);
+  if(degMode){
+    t=t.replace(/Math\.sin\(/g,'Math.sin(DTR(').replace(/Math\.cos\(/g,'Math.cos(DTR(').replace(/Math\.tan\(/g,'Math.tan(DTR(');
+  }
+  t=t.replace(/factorial\(/g,'factorial(');
+  t='with(Math)return ('+t+')';
+  try{
+    const fn=new Function('DTR','factorial',t);
+    const DTR=degMode?x=>x*Math.PI/180:x=>x;
+    const res=fn(DTR,factorial);
+    if(typeof res==='number'&&isFinite(res))return parseFloat(Number(res).toPrecision(12));
+    return NaN;
+  }catch{return null}
+}
+
+function insert(v){
+  if(v==='C'){expr='';updateDisplay();return}
+  if(v==='⌫'){expr=expr.slice(0,-1);updateDisplay();return}
+  if(v==='='){const r=evalExpr();if(r!==null&&r!==undefined){ans=r;expr=String(r)}updateDisplay();return}
+  if(v==='±'){
+    const m=expr.match(/([\d.]+)$/);
+    if(m){const n=m[1];expr=expr.slice(0,-n.length)+(n.startsWith('-')?n.slice(1):'-'+n)}
+    updateDisplay();
+    return
+  }
+  const sciMap={'sin(':'sin(','cos(':'cos(','tan(':'tan(','log(':'log(','ln(':'ln(','√(':'√(','!':'!','²':'²','^':'^','π':'π','e':'e','(':'(',')':')','1/':'1/','%':'%'};
+  const vv=sciMap[v]||v;
+  expr+=vv;
+  updateDisplay();
+}
+
+document.getElementById('mainBtns').addEventListener('click',e=>{const v=e.target.dataset.v;if(v)insert(v)});
+document.querySelector('.sci-row').addEventListener('click',e=>{const v=e.target.dataset.sci;if(v)insert(v)});
+
 document.addEventListener('keydown',e=>{
-  const m={'Enter':'=','Escape':'C','Backspace':'C','Delete':'C','/':'÷','*':'×','-':'−'};
+  const m={'Enter':'=','Escape':'C','Delete':'⌫','Backspace':'⌫','/':'÷','*':'×','-':'−'};
   const k=m[e.key]||e.key;
-  const btn=document.querySelector(`[data-v="${k}"]`);
-  if(btn){btn.click();btn.style.transform='scale(.93)';setTimeout(()=>btn.style.transform='',100)}
+  if(k.length===1&&/[0-9.+\-*/^()]/.test(k)){expr+=k;updateDisplay();return}
+  if(k==='='||k==='C'||k==='⌫'||k==='÷'||k==='×'||k==='−'){insert(k)}
 });
 </script>
 </body>
