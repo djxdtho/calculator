@@ -34,7 +34,23 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;min-height:100vh;
 footer{position:fixed;bottom:20px;z-index:1;color:rgba(255,255,255,.2);font-size:12px;letter-spacing:.5px}
 footer a{color:rgba(255,255,255,.3);text-decoration:none}
 footer a:hover{color:rgba(255,255,255,.6)}
-@media(max-width:400px){.calc{width:calc(100vw-32px);padding:16px;border-radius:20px}.result{font-size:26px}.btn{font-size:16px;border-radius:10px}}
+@media(max-width:480px){
+  .calc{width:calc(100vw-24px);padding:14px;border-radius:18px}
+  .result{font-size:26px}
+  .result.small{font-size:18px}
+  .btn{font-size:16px;border-radius:10px}
+  .btn-sci{font-size:10px;border-radius:7px}
+  .buttons{gap:6px}
+  .sci-row{gap:4px}
+  .display-wrap{padding:10px 14px;min-height:60px}
+  .expr{font-size:11px}
+}
+@media(max-width:360px){
+  .calc{padding:10px}
+  .result{font-size:22px}
+  .btn{font-size:14px}
+  .buttons{gap:4px}
+}
 </style>
 </head>
 <body>
